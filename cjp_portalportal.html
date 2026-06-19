@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CJP — Cockroach Janta Party Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#F5F4F0;
+  --surface:#FFFFFF;
+  --surface2:#F0EFE9;
+  --border:#E2E0D8;
+  --border2:#CCCAC0;
+  --text:#1A1A18;
+  --text2:#5A5A54;
+  --text3:#9A9A90;
+  --red:#C0392B;
+  --red-light:#FDF0EE;
+  --red-mid:#F5C0BA;
+  --amber:#9A5F00;
+  --amber-light:#FDF7EC;
+  --amber-mid:#EDCF8A;
+  --blue:#1A5FA0;
+  --blue-light:#EEF5FC;
+  --blue-mid:#AAC8E8;
+  --green:#2A6E10;
+  --green-light:#EEF6E8;
+  --green-mid:#A8D08A;
+  --purple:#4A3AB0;
+  --purple-light:#F0EEFF;
+  --purple-mid:#C0B8F0;
+  --r:10px;
+  --r2:14px;
+}
+body{font-family:'Inter',sans-serif;font-size:15px;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+
+/* HEADER */
+.hdr{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:100;
+}
+.logo{
+  width:42px;height:42px;
+  background:var(--red);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.hdr-title{font-size:15px;font-weight:700;letter-spacing:-0.01em;color:var(--text)}
+.hdr-sub{font-size:11px;color:var(--text3);margin-top:1px;font-family:'JetBrains Mono',monospace}
+.hdr-badge{
+  margin-left:auto;flex-shrink:0;
+  background:var(--red-light);
+  border:1px solid var(--red-mid);
+  border-radius:8px;padding:5px 10px;text-align:center;
+}
+.hdr-badge .v{font-size:16px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;line-height:1}
+.hdr-badge .l{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* NAV */
+.nav{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex;overflow-x:auto;
+  scrollbar-width:none;gap:0;
+  padding:0 8px;
+}
+.nav::-webkit-scrollbar{display:none}
+.nb{
+  display:flex;align-items:center;gap:5px;
+  font-size:13px;font-weight:500;
+  font-family:'Inter',sans-serif;
+  padding:12px 12px;
+  border:none;background:transparent;
+  color:var(--text3);cursor:pointer;
+  white-space:nowrap;
+  border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;
+}
+.nb:hover{color:var(--text2)}
+.nb.on{color:var(--red);border-bottom-color:var(--red);font-weight:600}
+.nb i{font-size:15px}
+
+/* PAGES */
+.pg{display:none;padding:16px;max-width:680px;margin:0 auto}
+.pg.on{display:block}
+
+/* SECTION TITLE */
+.st{
+  font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--text3);font-family:'JetBrains Mono',monospace;
+  margin-bottom:12px;margin-top:4px;
+  display:flex;align-items:center;gap:8px;
+}
+.st i{font-size:14px;color:var(--red)}
+.bdg{
+  font-size:10px;background:var(--surface2);color:var(--text3);
+  padding:2px 8px;border-radius:100px;border:1px solid var(--border);
+  font-weight:500;text-transform:none;letter-spacing:0;
+}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+.met{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r2);padding:12px;
+}
+.met .v{font-size:20px;font-weight:700;line-height:1;font-family:'JetBrains Mono',monospace}
+.met .l{font-size:11px;color:var(--text3);margin-top:5px;line-height:1.3}
+
+/* CARD */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r2);padding:14px 16px;margin-bottom:10px;
+}
+.card h3{font-size:14px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.card h3 i{color:var(--text3);font-size:15px}
+.card p{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;margin:3px 3px 0 0;font-family:'JetBrains Mono',monospace}
+.r{background:var(--red-light);color:var(--red);border:1px solid var(--red-mid)}
+.a{background:var(--amber-light);color:var(--amber);border:1px solid var(--amber-mid)}
+.b{background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-mid)}
+.g{background:var(--green-light);color:var(--green);border:1px solid var(--green-mid)}
+.p{background:var(--purple-light);color:var(--purple);border:1px solid var(--purple-mid)}
+.gr{background:var(--surface2);color:var(--text3);border:1px solid var(--border)}
+
+/* DEMAND CARD */
+.demand-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--red);
+  border-radius:0 var(--r2) var(--r2) 0;
+  padding:14px 16px;margin-bottom:10px;
+}
+.demand-card.b-border{border-left-color:var(--blue)}
+.demand-card.g-border{border-left-color:var(--green)}
+.demand-card.p-border{border-left-color:var(--purple)}
+.demand-card.a-border{border-left-color:var(--amber)}
+.demand-card h3{font-size:14px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:7px}
+.demand-card p{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* PROGRESS BAR */
+.pbar{background:var(--surface2);border-radius:100px;height:4px;margin:5px 0 10px;overflow:hidden}
+.pfill{height:100%;border-radius:100px}
+
+/* ROWS */
+.row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:3px 0}
+.row span:first-child{color:var(--text2)}
+.row span:last-child{font-weight:700;font-family:'JetBrains Mono',monospace}
+
+/* SEARCH */
+.srch{
+  width:100%;padding:11px 14px;
+  border:1px solid var(--border2);border-radius:var(--r);
+  background:var(--surface);color:var(--text);
+  font-size:14px;font-family:'Inter',sans-serif;
+  margin-bottom:12px;outline:none;
+  transition:border-color .15s;
+}
+.srch:focus{border-color:var(--blue)}
+.srch::placeholder{color:var(--text3)}
+
+/* FILTER BAR */
+.fbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.fb{
+  font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;
+  padding:5px 12px;border-radius:100px;
+  border:1px solid var(--border2);background:var(--surface);
+  color:var(--text3);cursor:pointer;transition:all .15s;
+  white-space:nowrap;
+}
+.fb.on{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* POLITICIAN GRID */
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.pc{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r2);padding:12px;cursor:pointer;
+  transition:border-color .15s;
+}
+.pc:active{transform:scale(0.98)}
+.pc.sel{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+
+/* AVATAR */
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+
+/* DETAIL BOX */
+.dbox{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:12px}
+.dr{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;gap:12px}
+.dr:last-child{border-bottom:none}
+.dr span:first-child{color:var(--text3);white-space:nowrap;flex-shrink:0;font-size:11px;font-family:'JetBrains Mono',monospace;padding-top:1px}
+.dr span:last-child{font-weight:600;text-align:right;line-height:1.4}
+
+/* NOTE */
+.note{font-size:11px;color:var(--text3);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;line-height:1.6;margin-top:12px}
+
+/* HERO */
+.hero{
+  background:var(--red);
+  border-radius:var(--r2);padding:18px;margin-bottom:16px;
+  color:#fff;position:relative;overflow:hidden;
+}
+.hero h2{font-size:22px;font-weight:700;letter-spacing:-0.03em;line-height:1.2;margin-bottom:8px}
+.hero p{font-size:13px;opacity:0.85;line-height:1.6}
+.hero .bug{font-size:52px;position:absolute;right:14px;top:12px;line-height:1;opacity:0.9}
+.hero-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.hero-tag{background:rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px;font-family:'JetBrains Mono',monospace;border:1px solid rgba(255,255,255,0.3)}
+
+/* BLOCKED BANNER */
+.blocked{
+  background:var(--red-light);border:1px solid var(--red-mid);
+  border-radius:var(--r);padding:10px 12px;
+  font-size:12px;color:var(--red);margin-bottom:14px;
+  display:flex;align-items:flex-start;gap:8px;line-height:1.5;
+  font-family:'JetBrains Mono',monospace;font-weight:500;
+}
+.blocked i{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* COMPARE BAR */
+.cbar{margin-bottom:14px}
+.cbar-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.cbar-label span:first-child{color:var(--text2)}
+.cbar-label span:last-child{font-weight:700;font-family:'JetBrains Mono',monospace}
+
+/* RTI STATUS */
+.rti-stat{font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;padding:3px 9px;border-radius:100px;white-space:nowrap;flex-shrink:0}
+
+/* CHART WRAP */
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:16px}
+.chart-title{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em}
+.chart-canvas{position:relative;width:100%;height:180px}
+
+/* PROG ROW */
+.prog-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:6px;font-family:'JetBrains Mono',monospace}
+
+@media(max-width:360px){
+  .pgrid{grid-template-columns:1fr}
+  .hero h2{font-size:19px}
+  .hero .bug{font-size:38px}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">🪳</div>
+  <div>
+    <div class="hdr-title">CJP Portal</div>
+    <div class="hdr-sub">Cockroach Janta Party</div>
+  </div>
+  <div class="hdr-badge">
+    <div class="v">20M+</div>
+    <div class="l">followers</div>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nb on" onclick="go('home',this)"><i class="ti ti-home" aria-hidden="true"></i> Home</button>
+  <button class="nb" onclick="go('demands',this)"><i class="ti ti-list-check" aria-hidden="true"></i> Demands</button>
+  <button class="nb" onclick="go('politicians',this)"><i class="ti ti-user-exclamation" aria-hidden="true"></i> Netas</button>
+  <button class="nb" onclick="go('paperleaks',this)"><i class="ti ti-file-alert" aria-hidden="true"></i> Leaks</button>
+  <button class="nb" onclick="go('unemployment',this)"><i class="ti ti-briefcase-off" aria-hidden="true"></i> Jobs</button>
+  <button class="nb" onclick="go('rti',this)"><i class="ti ti-file-search" aria-hidden="true"></i> RTI</button>
+  <button class="nb" onclick="go('news',this)"><i class="ti ti-news" aria-hidden="true"></i> News</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="pg on">
+  <div class="hero">
+    <span class="bug">🪳</span>
+    <h2>Voice of the<br>Lazy &amp; Unemployed</h2>
+    <p>CJI Surya Kant called us cockroaches. Gen Z made it a badge. 78 hrs → 3M followers. 1 week → 20M.</p>
+    <div class="hero-tags">
+      <span class="hero-tag"><i class="ti ti-ban" aria-hidden="true"></i> X blocked in India</span>
+      <span class="hero-tag"><i class="ti ti-calendar" aria-hidden="true"></i> Est. 16 May 2026</span>
+    </div>
+  </div>
+
+  <div class="blocked">
+    <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+    MeitY blocked CJP's X account on 21 May 2026 — Section 69A IT Act, "national security." RTI filed same day.
+  </div>
+
+  <div class="metrics">
+    <div class="met"><div class="v" style="color:var(--red)">20M+</div><div class="l">Instagram followers</div></div>
+    <div class="met"><div class="v" style="color:var(--amber)">350K+</div><div class="l">Members signed up</div></div>
+    <div class="met"><div class="v" style="color:var(--red)">40%</div><div class="l">Graduates unemployed (&lt;25)</div></div>
+    <div class="met"><div class="v" style="color:var(--blue)">9.9%</div><div class="l">Youth unemployment rate</div></div>
+    <div class="met"><div class="v" style="color:var(--red)">72L+</div><div class="l">Exam cancellations (2024)</div></div>
+    <div class="met"><div class="v" style="color:var(--purple)">₹16K Cr</div><div class="l">Electoral bonds anon.</div></div>
+  </div>
+
+  <div class="st"><i class="ti ti-info-circle" aria-hidden="true"></i> About CJP <span class="bdg">Background</span></div>
+  <div class="card"><h3><i class="ti ti-sparkles" aria-hidden="true"></i> Origin</h3><p>On 15 May 2026, Chief Justice Surya Kant compared unemployed youth to "cockroaches and parasites." India's Gen Z flipped the insult. Within 78 hours — 3 million followers. Within one week — 20 million, more than double BJP's audience.</p></div>
+  <div class="card"><h3><i class="ti ti-user" aria-hidden="true"></i> Founder</h3><p>Abhijeet Dipke, 30, former AAP communications strategist. Built the website using Claude AI and ChatGPT. CJP is not a registered party — it's a satirical protest movement demanding accountability.</p></div>
+  <div class="card"><h3><i class="ti ti-users" aria-hidden="true"></i> Who can join?</h3><p>Eligibility: be "lazy," "unemployed," or "chronically online." No religion check, no caste check, no gender check. <em style="color:var(--text);font-style:normal;font-weight:600">"Voice of the Lazy &amp; Unemployed."</em></p></div>
+  <div class="card" style="border-left:3px solid var(--red);border-radius:0 var(--r2) var(--r2) 0"><h3><i class="ti ti-shield-off" aria-hidden="true"></i> Why is the govt scared?</h3><p>On 21 May 2026, MeitY ordered CJP's X account withheld under Section 69A IT Act — "national security." Opposition leaders called it a blatant attack on free speech.</p><div style="margin-top:8px"><span class="tag r">Account Blocked</span><span class="tag a">Section 69A</span></div></div>
+
+  <div class="st" style="margin-top:4px"><i class="ti ti-chart-bar" aria-hidden="true"></i> CJP vs BJP — Instagram</div>
+  <div class="card" style="padding:14px 16px">
+    <div class="cbar"><div class="cbar-label"><span>BJP (ruling party)</span><span>9M</span></div><div class="pbar"><div class="pfill" style="width:45%;background:var(--blue)"></div></div></div>
+    <div class="cbar"><div class="cbar-label"><span>CJP (1 week old)</span><span style="color:var(--red)">20M+</span></div><div class="pbar"><div class="pfill" style="width:100%;background:var(--red)"></div></div></div>
+  </div>
+</div>
+
+<!-- DEMANDS -->
+<div id="demands" class="pg">
+  <div class="st"><i class="ti ti-list-check" aria-hidden="true"></i> CJP's 5 core demands <span class="bdg">Active protests</span></div>
+
+  <div class="demand-card">
+    <h3><i class="ti ti-gavel" aria-hidden="true"></i> 1. Judiciary independence</h3>
+    <p>No Chief Justice shall be given a Rajya Sabha seat, governorship, or any government post after retirement. CJP demands a clean break between judiciary and government patronage.</p>
+    <div style="margin-top:8px"><span class="tag r">Protest Active</span><span class="tag a">CJI Surya Kant Row</span></div>
+    <div class="prog-row"><span>Public support</span><span style="color:var(--red)">Very high</span></div>
+  </div>
+
+  <div class="demand-card b-border">
+    <h3><i class="ti ti-checkup-list" aria-hidden="true"></i> 2. Electoral accountability</h3>
+    <p>If any legitimate vote is deleted or tampered with, the Chief Election Commissioner must be arrested under UAPA — because destroying voting rights is "no less than terrorism."</p>
+    <div style="margin-top:8px"><span class="tag r">Electoral Rolls Row</span><span class="tag b">UAPA Accountability</span></div>
+  </div>
+
+  <div class="demand-card g-border">
+    <h3><i class="ti ti-gender-bigender" aria-hidden="true"></i> 3. Women's reservation — 50%</h3>
+    <p>The Women's Reservation Act gives only 33%. CJP demands 50% — without increasing Parliament strength. Plus 50% of all Cabinet positions for women. Rallies held in Delhi, Mumbai, Chennai.</p>
+    <div style="margin-top:8px"><span class="tag g">Women's Rights</span><span class="tag a">33% → 50%</span></div>
+  </div>
+
+  <div class="demand-card p-border">
+    <h3><i class="ti ti-news-off" aria-hidden="true"></i> 4. Cancel Ambani &amp; Adani media</h3>
+    <p>Cancel all media licenses held by Ambani (Network18, CNN-News18) and Adani (NDTV). Create a truly independent public broadcasting system.</p>
+    <div style="margin-top:8px"><span class="tag p">Press Freedom</span><span class="tag r">Media Monopoly</span></div>
+  </div>
+
+  <div class="demand-card a-border">
+    <h3><i class="ti ti-currency-rupee" aria-hidden="true"></i> 5. Full financial transparency</h3>
+    <p><em style="color:var(--text);font-style:normal">"We are here to ask — loudly, repeatedly, in writing — where the money went."</em> Full RTI compliance, PM CARES audit, electoral funding disclosure.</p>
+    <div style="margin-top:8px"><span class="tag a">PM CARES Opacity</span><span class="tag r">Electoral Bonds</span></div>
+  </div>
+
+  <div class="st" style="margin-top:4px"><i class="ti ti-map-pin" aria-hidden="true"></i> Other demands</div>
+  <div class="card"><h3><i class="ti ti-school" aria-hidden="true"></i> Dissolve NTA</h3><p>After NEET 2024 (24L affected), UGC-NET (9L), UP Police (48L) — dissolve NTA completely. Create independent exam authority with zero tolerance for paper leaks.</p><div style="margin-top:8px"><span class="tag r">NTA Dissolve</span><span class="tag a">NEET 2024</span></div></div>
+  <div class="card"><h3><i class="ti ti-briefcase" aria-hidden="true"></i> Youth Employment Mission</h3><p>40% of graduates under 25 unemployed (Azim Premji Univ.). Demand legally binding employment targets, AI displacement regulation, and independent employment data reporting.</p><div style="margin-top:8px"><span class="tag r">40% Unemployed</span><span class="tag b">AI Jobs</span></div></div>
+  <div class="card"><h3><i class="ti ti-building-bank" aria-hidden="true"></i> Repeal Section 69A</h3><p>Section 69A was used to block CJP's own X account within days of founding. Demand full repeal or reform of all laws silencing political dissent online.</p><div style="margin-top:8px"><span class="tag r">Section 69A</span><span class="tag p">Free Speech</span></div></div>
+  <div class="card"><h3><i class="ti ti-building" aria-hidden="true"></i> End caste discrimination in hiring</h3><p>Strict enforcement of anti-discrimination laws in private sector. Mandatory diversity reporting for companies above 500 employees. No religion, caste, or gender check — ever.</p><div style="margin-top:8px"><span class="tag g">Anti-Discrimination</span><span class="tag a">Private Sector</span></div></div>
+</div>
+
+<!-- POLITICIANS -->
+<div id="politicians" class="pg">
+  <div class="st"><i class="ti ti-user-exclamation" aria-hidden="true"></i> Corrupt netas tracker <span class="bdg">MPs · MLAs · CMs · PM</span></div>
+  <input class="srch" type="text" placeholder="Search name, party, or case..." oninput="fpols(this.value)" />
+  <div class="fbar">
+    <button class="fb on" onclick="pfilt('all',this)">All</button>
+    <button class="fb" onclick="pfilt('PM/CM',this)">PM/CM</button>
+    <button class="fb" onclick="pfilt('MP',this)">MP</button>
+    <button class="fb" onclick="pfilt('MLA',this)">MLA</button>
+    <button class="fb" onclick="pfilt('BJP',this)">BJP</button>
+    <button class="fb" onclick="pfilt('INC',this)">Congress</button>
+    <button class="fb" onclick="pfilt('convicted',this)">Convicted</button>
+  </div>
+  <div class="metrics" style="margin-bottom:12px">
+    <div class="met"><div class="v" style="color:var(--red)" id="ps-conv">-</div><div class="l">Convicted</div></div>
+    <div class="met"><div class="v" style="color:var(--amber)" id="ps-arr">-</div><div class="l">Arrested</div></div>
+    <div class="met"><div class="v" style="color:var(--blue)" id="ps-fir">-</div><div class="l">FIR/Charged</div></div>
+    <div class="met"><div class="v" id="ps-tot">-</div><div class="l">Showing</div></div>
+  </div>
+  <div class="pgrid" id="pgrid"></div>
+  <div id="pdetail"></div>
+  <div class="note">Data from ADR India, EC affidavits, CBI/ED releases, Supreme Court orders. Acquittals and stays noted. All persons innocent until proven guilty by court of final jurisdiction.</div>
+</div>
+
+<!-- PAPER LEAKS -->
+<div id="paperleaks" class="pg">
+  <div class="st"><i class="ti ti-file-alert" aria-hidden="true"></i> Exam paper leak crisis <span class="bdg">2021–2025</span></div>
+  <div class="metrics">
+    <div class="met"><div class="v" style="color:var(--red)">72L+</div><div class="l">Students affected 2024</div></div>
+    <div class="met"><div class="v" style="color:var(--amber)">12</div><div class="l">Major leaks 2024</div></div>
+    <div class="met"><div class="v" style="color:var(--red)">3</div><div class="l">National exams cancelled</div></div>
+    <div class="met"><div class="v" style="color:var(--blue)">1</div><div class="l">CBI probe ordered</div></div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Paper leak incidents per year</div>
+    <div class="chart-canvas"><canvas id="leakChart"></canvas></div>
+  </div>
+  <div class="card"><h3><i class="ti ti-stethoscope" aria-hidden="true"></i> NEET-UG 2024 — 24 lakh affected</h3><p>India's largest medical entrance exam compromised. Paper leaked in Bihar and Rajasthan. SC ordered CBI probe. NTA credibility destroyed. CJP protest outside NTA HQ drew thousands.</p><div style="margin-top:8px"><span class="tag r">24L Affected</span><span class="tag a">CBI Probe</span></div></div>
+  <div class="card"><h3><i class="ti ti-certificate" aria-hidden="true"></i> UGC-NET — cancelled 1 day after exam</h3><p>Paper leaked on the dark web same night as the exam. 9 lakh candidates told it was cancelled the next morning. NTA restructuring announced. CJP demanded full dissolution.</p><div style="margin-top:8px"><span class="tag r">Cancelled</span><span class="tag a">9L Candidates</span></div></div>
+  <div class="card"><h3><i class="ti ti-shield-off" aria-hidden="true"></i> UP Police 2024 — largest single cancellation</h3><p>48 lakh candidates. Largest exam cancellation in Indian history. Accused included serving policemen — the very people meant to prevent crime.</p><div style="margin-top:8px"><span class="tag r">48L Candidates</span><span class="tag r">Record Cancellation</span></div></div>
+  <div class="card"><h3><i class="ti ti-train" aria-hidden="true"></i> RRB-NTPC 2021 — trains blocked</h3><p>Students set fire to trains across Bihar after result manipulation allegations. Government ordered re-exam. High court intervened. An early warning ignored for 3 more years.</p><div style="margin-top:8px"><span class="tag a">Trains Blocked</span><span class="tag b">Re-exam Ordered</span></div></div>
+  <div class="card"><h3><i class="ti ti-building-community" aria-hidden="true"></i> BPSC 70th CCE — students still protesting</h3><p>Bihar Public Service Commission paper leak. Students in Patna sat dharna for weeks. Many were lathi-charged. CJP adopted this alongside NEET.</p><div style="margin-top:8px"><span class="tag r">Lathi Charge</span><span class="tag r">Ongoing Protest</span></div></div>
+  <div class="card"><h3><i class="ti ti-building-bank" aria-hidden="true"></i> Vyapam, REET, Haryana Police — a pattern</h3><p>Vyapam (MP) 2013–15: 50+ suspicious deaths. REET 2021: 16L candidates, leaked hours before. Haryana Police: mass copying with police connivance. A clear pattern of state-sponsored exam corruption.</p><div style="margin-top:8px"><span class="tag r">Vyapam Deaths</span><span class="tag a">State Connivance</span></div></div>
+</div>
+
+<!-- UNEMPLOYMENT -->
+<div id="unemployment" class="pg">
+  <div class="st"><i class="ti ti-briefcase-off" aria-hidden="true"></i> Youth unemployment crisis <span class="bdg">2026</span></div>
+  <div class="metrics">
+    <div class="met"><div class="v" style="color:var(--red)">9.9%</div><div class="l">Youth unemployed (15–29)</div></div>
+    <div class="met"><div class="v" style="color:var(--amber)">13.6%</div><div class="l">Urban youth unemployed</div></div>
+    <div class="met"><div class="v" style="color:var(--red)">40%</div><div class="l">Graduates &lt;25 jobless</div></div>
+    <div class="met"><div class="v" style="color:var(--blue)">54%</div><div class="l">Gen Z delayed life plans</div></div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Youth unemployment % — 2018 to 2025</div>
+    <div class="chart-canvas"><canvas id="unempChart"></canvas></div>
+  </div>
+  <div class="st"><i class="ti ti-map-pin" aria-hidden="true"></i> State-wise urban youth unemployment</div>
+  <div class="card" style="padding:14px 16px;margin-bottom:16px">
+    <div class="cbar"><div class="cbar-label"><span>Rajasthan</span><span style="color:var(--red)">18.3%</span></div><div class="pbar"><div class="pfill" style="width:90%;background:var(--red)"></div></div></div>
+    <div class="cbar"><div class="cbar-label"><span>Haryana</span><span style="color:var(--red)">16.8%</span></div><div class="pbar"><div class="pfill" style="width:82%;background:var(--red)"></div></div></div>
+    <div class="cbar"><div class="cbar-label"><span>Bihar</span><span style="color:var(--amber)">15.2%</span></div><div class="pbar"><div class="pfill" style="width:74%;background:var(--amber)"></div></div></div>
+    <div class="cbar"><div class="cbar-label"><span>Uttar Pradesh</span><span style="color:var(--amber)">14.1%</span></div><div class="pbar"><div class="pfill" style="width:68%;background:var(--amber)"></div></div></div>
+    <div class="cbar"><div class="cbar-label"><span>Maharashtra</span><span style="color:var(--blue)">10.2%</span></div><div class="pbar"><div class="pfill" style="width:50%;background:var(--blue)"></div></div></div>
+    <div class="cbar"><div class="cbar-label"><span>Karnataka</span><span style="color:var(--green)">7.8%</span></div><div class="pbar"><div class="pfill" style="width:38%;background:var(--green)"></div></div></div>
+  </div>
+  <div class="card"><h3><i class="ti ti-robot" aria-hidden="true"></i> Why AI makes it worse</h3><p>India's BPO/KPO sector employs millions in entry-level roles. Generative AI is automating these exact tasks. 54% of Gen Z have postponed buying homes. 44% of millennials delayed marriage due to economic uncertainty.</p><div style="margin-top:8px"><span class="tag r">AI Displacement</span><span class="tag a">BPO Threat</span></div></div>
+  <div class="card"><h3><i class="ti ti-target" aria-hidden="true"></i> CJP's demand</h3><p>National Youth Employment Mission with legally binding targets. Mandatory independent employment data verification. Tax incentives for companies retaining graduates 2+ years. AI impact assessment before large-scale automation.</p><div style="margin-top:8px"><span class="tag b">Policy Demand</span><span class="tag g">AI Regulation</span></div></div>
+</div>
+
+<!-- RTI -->
+<div id="rti" class="pg">
+  <div class="st"><i class="ti ti-file-search" aria-hidden="true"></i> RTI tracker <span class="bdg">Filed by CJP supporters</span></div>
+  <div class="fbar">
+    <button class="fb on" onclick="rfilt('all',this)">All</button>
+    <button class="fb" onclick="rfilt('refused',this)">Refused</button>
+    <button class="fb" onclick="rfilt('pending',this)">Pending</button>
+    <button class="fb" onclick="rfilt('replied',this)">Replied</button>
+    <button class="fb" onclick="rfilt('appeal',this)">In appeal</button>
+  </div>
+  <div id="rtilist"></div>
+</div>
+
+<!-- NEWS -->
+<div id="news" class="pg">
+  <div class="st"><i class="ti ti-news" aria-hidden="true"></i> CJP news feed <span class="bdg">May–June 2026</span></div>
+  <div class="fbar">
+    <button class="fb on" onclick="nfilt('all',this)">All</button>
+    <button class="fb" onclick="nfilt('cjp',this)">CJP</button>
+    <button class="fb" onclick="nfilt('govt',this)">Govt</button>
+    <button class="fb" onclick="nfilt('exam',this)">Exams</button>
+    <button class="fb" onclick="nfilt('jobs',this)">Jobs</button>
+  </div>
+  <div id="newslist"></div>
+</div>
+
+<script>
+function go(id,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+
+const tc='#9A9A90';
+const gc='rgba(0,0,0,0.06)';
+
+new Chart(document.getElementById('leakChart'),{
+  type:'bar',
+  data:{labels:['2021','2022','2023','2024','2025'],datasets:[{label:'Incidents',data:[3,5,8,12,9],backgroundColor:'#C0392B',borderWidth:0,borderRadius:5}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{display:false},border:{display:false}},y:{ticks:{color:tc,stepSize:2,font:{size:11}},grid:{color:gc},border:{display:false}}}}
+});
+
+new Chart(document.getElementById('unempChart'),{
+  type:'line',
+  data:{labels:['2018','2019','2020','2021','2022','2023','2024','2025'],datasets:[{label:'%',data:[7.9,8.2,9.5,9.1,8.8,9.2,9.7,9.9],borderColor:'#C0392B',backgroundColor:'rgba(192,57,43,0.08)',fill:true,tension:0.4,pointBackgroundColor:'#C0392B',pointRadius:4,pointBorderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{display:false},border:{display:false}},y:{ticks:{color:tc,callback:v=>v+'%',font:{size:11}},grid:{color:gc},border:{display:false},min:6,max:11}}}
+});
+
+const pols=[
+  {n:'Narendra Modi',r:'Prime Minister',pos:'PM/CM',party:'BJP',av:'NM',bg:'#EEF5FC',tc2:'#185FA5',assets:'₹3.02 Cr',status:'No conviction',cases:'PM CARES opacity; electoral bonds unconstitutional (SC 2024); Snoopgate 2013 (dropped)',tags:['PM CARES RTI Refused','Electoral Bonds','No Conviction'],tc3:['a','a','g']},
+  {n:'Hemant Soren',r:'CM Jharkhand',pos:'PM/CM',party:'JMM',av:'HS',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹17.9 Cr',status:'ED arrested Jan 2024, bail',cases:'Mining scam (PMLA); illegal land allotment; ₹1000+ Cr alleged',tags:['ED Arrested','PMLA','Bail'],tc3:['r','r','a']},
+  {n:'Arvind Kejriwal',r:'Former CM Delhi',pos:'PM/CM',party:'AAP',av:'AK',bg:'#EEF6E8',tc2:'#2A6E10',assets:'₹3.4 Cr',status:'ED arrested Mar 2024, SC bail',cases:'Delhi liquor policy scam; ₹100+ Cr kickback alleged; CBI + ED investigating',tags:['Liquor Scam','ED Arrested','SC Bail'],tc3:['r','r','a']},
+  {n:'K. Chandrashekhar Rao',r:'Former CM Telangana',pos:'PM/CM',party:'BRS',av:'KCR',bg:'#F0EEFF',tc2:'#4A3AB0',assets:'₹53 Cr',status:'FIR filed, under investigation',cases:'Phone tapping scam; Kaleshwaram project ₹80,000 Cr irregularity; cash-for-vote',tags:['Phone Tapping','Kaleshwaram','CAG Flagged'],tc3:['r','r','a']},
+  {n:'Bhupesh Baghel',r:'Former CM Chhattisgarh',pos:'PM/CM',party:'INC',av:'BB',bg:'#FDF7EC',tc2:'#9A5F00',assets:'₹8.6 Cr',status:'Arrested 2024',cases:'Mahadev betting app scam; ₹508 Cr hawala; coal levy scam ₹2000 Cr alleged',tags:['Betting App','Arrested','Coal Scam'],tc3:['r','r','a']},
+  {n:'Siddaramaiah',r:'CM Karnataka',pos:'PM/CM',party:'INC',av:'SI',bg:'#EEF5FC',tc2:'#185FA5',assets:'₹51.5 Cr',status:'FIR ordered 2024, Governor sanction',cases:'MUDA scam — wife given 14 sites illegally; Governor prosecution sanction Aug 2024',tags:['MUDA Scam','FIR 2024','Governor Sanction'],tc3:['r','r','a']},
+  {n:'D.K. Shivakumar',r:'Deputy CM Karnataka',pos:'PM/CM',party:'INC',av:'DKS',bg:'#EEF5FC',tc2:'#185FA5',assets:'₹840 Cr',status:'Arrested 2019, bail',cases:'Tax evasion ₹74 Cr; PMLA case; benami property',tags:['Tax Evasion','PMLA','₹840 Cr'],tc3:['r','r','a']},
+  {n:'Sukhbir Singh Badal',r:'Former Deputy CM Punjab',pos:'PM/CM',party:'SAD',av:'SSB',bg:'#F0EEFF',tc2:'#4A3AB0',assets:'₹95 Cr',status:'FIR; Akal Takht punishment 2024',cases:'Punjab drug scam; 2015 sacrilege case; Akal Takht "tankhaiya" Dec 2024',tags:['Drug Scam','Sacrilege','Akal Takht'],tc3:['r','r','a']},
+  {n:'Mayawati',r:'Former CM UP, BSP chief',pos:'PM/CM',party:'BSP',av:'MW',bg:'#F0EEFF',tc2:'#4A3AB0',assets:'₹111 Cr',status:'DA case — SC stay',cases:'₹111 Cr disproportionate assets; SC stay on trial',tags:['₹111 Cr DA','SC Stay','BSP Chief'],tc3:['a','a','gr']},
+  {n:'Akhilesh Yadav',r:'Former CM UP',pos:'PM/CM',party:'SP',av:'AY',bg:'#FDF7EC',tc2:'#9A5F00',assets:'₹58 Cr',status:'No conviction, allegations',cases:'Illegal mining UP; DA inquiry; ED cases on family',tags:['Mining Scam','DA Inquiry','No Conviction'],tc3:['a','a','gr']},
+  {n:'V.K. Sasikala',r:'Former AIADMK chief',pos:'PM/CM',party:'AIADMK',av:'VKS',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹163 Cr',status:'Convicted 2017 — 4 yrs. Released 2021.',cases:'DA case with Jayalalithaa — SC convicted Feb 2017; 4 years Bengaluru jail',tags:['Convicted','4 Yr Jail','DA Case'],tc3:['r','r','r']},
+  {n:'O. Panneerselvam',r:'Former CM Tamil Nadu',pos:'PM/CM',party:'AIADMK',av:'OPS',bg:'#FDF7EC',tc2:'#9A5F00',assets:'₹18.9 Cr',status:'Arrested 2023, bail',cases:'Jayalalithaa DA case abetment; ED PMLA property attachment',tags:['DA Case','ED PMLA','Arrested 2023'],tc3:['r','r','a']},
+  {n:'Lalu Prasad Yadav',r:'Former CM Bihar, RJD chief',pos:'MP',party:'RJD',av:'LPY',bg:'#FDF7EC',tc2:'#9A5F00',assets:'₹60+ Cr',status:'Convicted — 4 cases. Bail.',cases:'Fodder scam ₹950 Cr — 4 convictions; land-for-job scam (CBI 2023)',tags:['Convicted 4 Cases','Fodder Scam','Land-for-Job'],tc3:['r','r','r']},
+  {n:'P. Chidambaram',r:'Former Finance Minister',pos:'MP',party:'INC',av:'PC',bg:'#EEF5FC',tc2:'#185FA5',assets:'₹72 Cr',status:'Arrested 2019, SC bail',cases:'INX Media case — CBI/ED; 106 days Tihar jail',tags:['INX Media','106 Days Jail','SC Bail'],tc3:['r','r','a']},
+  {n:'A. Raja',r:'Former Telecom Minister',pos:'MP',party:'DMK',av:'AR',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹9.7 Cr',status:'Acquitted 2017; CBI appeal pending',cases:'2G Spectrum scam ₹1.76 lakh crore; CBI arrested 2011; 15 months jail',tags:['2G Scam','CBI Arrested','Acquitted'],tc3:['r','r','g']},
+  {n:'Kanimozhi',r:'MP (Lok Sabha)',pos:'MP',party:'DMK',av:'KM',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹15.2 Cr',status:'Acquitted 2017, CBI appeal pending',cases:'2G Spectrum scam; 5 months jail; acquitted',tags:['2G Scam','5 Months Jail','Acquitted'],tc3:['r','r','g']},
+  {n:'Suresh Kalmadi',r:'Former MP, CWG chief',pos:'MP',party:'INC',av:'SK',bg:'#FDF7EC',tc2:'#9A5F00',assets:'₹8.4 Cr',status:'Arrested 2011, bail',cases:'Commonwealth Games 2010 scam; 9 months Tihar; ₹70,000 Cr alleged',tags:['CWG Scam','9M Tihar','₹70K Cr'],tc3:['r','r','r']},
+  {n:'Sajjan Kumar',r:'Former MP INC',pos:'MP',party:'INC',av:'SK2',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹10.4 Cr',status:'Convicted — life imprisonment 2018',cases:'1984 Sikh genocide — Delhi HC life imprisonment; SC upheld',tags:['Convicted','Life Imprisonment','1984 Genocide'],tc3:['r','r','r']},
+  {n:'Jagdish Tytler',r:'Former Minister, INC',pos:'MP',party:'INC',av:'JT',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹6.1 Cr',status:'CBI chargesheet 2024 — 40 years later',cases:'1984 Sikh genocide — CBI chargesheet 2024; 3 murders',tags:['1984 Genocide','CBI Chargesheet','3 Murder'],tc3:['r','r','r']},
+  {n:'Navjot Singh Sidhu',r:'Former Minister Punjab',pos:'MP',party:'INC',av:'NS',bg:'#EEF6E8',tc2:'#2A6E10',assets:'₹34 Cr',status:'SC convicted 1 year jail 2022. Served.',cases:'1988 road rage — Gurnam Singh death; SC sentenced 1 year May 2022',tags:['SC Convicted','Road Rage','1 Yr Served'],tc3:['r','r','g']},
+  {n:'Manish Sisodia',r:'Former Deputy CM Delhi',pos:'MLA',party:'AAP',av:'MS',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹2.1 Cr',status:'CBI arrested Feb 2023; 17 months jail; SC bail Aug 2024',cases:'Delhi liquor policy scam; 17 months Tihar; SC noted "prolonged incarceration"',tags:['Liquor Scam','17M Jail','SC Bail'],tc3:['r','r','a']},
+  {n:'Satyendar Jain',r:'Former Delhi Minister',pos:'MLA',party:'AAP',av:'SJ',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹4.8 Cr',status:'Convicted 2023 PMLA; appeal pending',cases:'Money laundering; ₹4.81 Cr benami property; PMLA convicted',tags:['Money Laundering','Convicted','Benami'],tc3:['r','r','r']},
+  {n:'Mukhtar Ansari',r:'Former MLA UP (died 2024)',pos:'MLA',party:'Independent',av:'MA',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹67 Cr attached',status:'Multiple convictions. Died custody Mar 2024.',cases:'60+ criminal cases; multiple murder convictions; ₹67 Cr seized',tags:['60+ Cases','Convicted','Died Custody'],tc3:['r','r','r']},
+  {n:'Atiq Ahmed',r:'Former MP/MLA UP (killed 2023)',pos:'MP',party:'SP',av:'AA',bg:'#FDF0EE',tc2:'#A32D2D',assets:'₹120 Cr attached',status:'Convicted; shot dead on live TV April 2023',cases:'100+ FIR; Umesh Pal murder; shot dead on camera',tags:['100+ FIR','Convicted','Shot Live TV'],tc3:['r','r','r']},
+  {n:'Uma Bharti',r:'Former CM MP, BJP leader',pos:'PM/CM',party:'BJP',av:'UB',bg:'#EEF5FC',tc2:'#185FA5',assets:'₹2.9 Cr',status:'Acquitted 2020',cases:'Babri Masjid demolition case — acquitted 2020; Hubli riots dropped',tags:['Babri Case','Acquitted 2020','Hubli Riots'],tc3:['a','g','a']},
+  {n:'Jayalalithaa',r:'Former CM Tamil Nadu (died 2016)',pos:'PM/CM',party:'AIADMK',av:'JJ',bg:'#EEF6E8',tc2:'#2A6E10',assets:'₹66 Cr+',status:'SC convicted posthumously 2017',cases:'DA case ₹66 Cr; convicted 2014, HC acquitted, SC re-convicted 2017',tags:['DA Case','SC Convicted','Posthumous'],tc3:['r','r','gr']},
+];
+
+let pf='all',ps='',psel=null;
+function fpols(v){ps=v.toLowerCase();psel=null;rpolsgrid();}
+function pfilt(f,btn){pf=f;psel=null;document.querySelectorAll('#politicians .fb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');rpolsgrid();}
+function rpolsgrid(){
+  const list=pols.filter(p=>{
+    const mf=pf==='all'||p.pos===pf||p.party===pf||(pf==='convicted'&&p.status.toLowerCase().includes('convicted'));
+    const ms=!ps||p.n.toLowerCase().includes(ps)||p.party.toLowerCase().includes(ps)||p.cases.toLowerCase().includes(ps);
+    return mf&&ms;
+  });
+  document.getElementById('ps-tot').textContent=list.length;
+  document.getElementById('ps-conv').textContent=list.filter(p=>p.status.toLowerCase().includes('convicted')).length;
+  document.getElementById('ps-arr').textContent=list.filter(p=>p.status.toLowerCase().includes('arrest')).length;
+  document.getElementById('ps-fir').textContent=list.filter(p=>p.tags.some(t=>['FIR','CBI','Chargesheet','PMLA','ED'].some(k=>t.includes(k)))).length;
+  document.getElementById('pgrid').innerHTML=list.map(p=>`
+    <div class="pc${psel===p.n?' sel':''}" onclick="selp('${p.n.replace(/'/g,"\\'")}')">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div class="av" style="background:${p.bg};color:${p.tc2}">${p.av}</div>
+        <div><div style="font-size:13px;font-weight:600;line-height:1.2;color:var(--text)">${p.n}</div><div style="font-size:10px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace">${p.party} · ${p.r.split(',')[0]}</div></div>
+      </div>
+      <div>${p.tags.slice(0,2).map((t,i)=>`<span class="tag ${p.tc3[i]}">${t}</span>`).join('')}</div>
+    </div>`).join('');
+  if(psel){const p=pols.find(x=>x.n===psel);if(p)showpd(p);}else document.getElementById('pdetail').innerHTML='';
+}
+function selp(n){psel=(psel===n?null:n);rpolsgrid();}
+function showpd(p){
+  document.getElementById('pdetail').innerHTML=`
+  <div class="dbox">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div class="av" style="background:${p.bg};color:${p.tc2};width:48px;height:48px;font-size:14px">${p.av}</div>
+      <div><div style="font-size:17px;font-weight:700;letter-spacing:-0.02em">${p.n}</div><div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px">${p.party} · ${p.r}</div></div>
+    </div>
+    <div class="dr"><span>Declared assets</span><span>${p.assets}</span></div>
+    <div class="dr"><span>Legal status</span><span style="max-width:60%;text-align:right">${p.status}</span></div>
+    <div class="dr"><span>Cases</span><span style="max-width:58%;text-align:right;line-height:1.5">${p.cases}</span></div>
+    <div style="margin-top:10px">${p.tags.map((t,i)=>`<span class="tag ${p.tc3[i]}">${t}</span>`).join('')}</div>
+  </div>`;}
+rpolsgrid();
+
+const rtis=[
+  {title:'PM CARES Fund — full expenditure details',ministry:'PMO',filed:'12 Jan 2024',deadline:'11 Feb 2024',status:'refused',pct:100,info:'Ministry said PM CARES is not a public authority under RTI Act. CJP argues this is unconstitutional — crores of public money, zero accountability.',appeal:'High Court petition filed'},
+  {title:'Electoral bonds — donor-party matching data',ministry:'Finance Ministry / SBI',filed:'8 Mar 2024',deadline:'7 Apr 2024',status:'refused',pct:100,info:'Despite SC ordering full disclosure, complete donor-party match data was not released. CJP filed RTI demanding the withheld portion.',appeal:'Supreme Court contempt petition'},
+  {title:'NEET 2024 — internal comms and question paper trail',ministry:'NTA / Education Ministry',filed:'20 Jun 2024',deadline:'20 Jul 2024',status:'partial',pct:75,info:'Question papers released. Internal communications between NTA officials and exam centres refused. CJP argues this hides the leakage mechanism.',appeal:'CIC first appeal filed'},
+  {title:'Adani SEBI probe — investigation status',ministry:'SEBI',filed:'5 Feb 2024',deadline:'6 Mar 2024',status:'pending',pct:35,info:'SEBI cited "investigation confidentiality" for non-response beyond deadline. Two reminder applications also unanswered.',appeal:'None yet'},
+  {title:'MP and MLA assets — verification records',ministry:'Election Commission',filed:'1 Apr 2025',deadline:'1 May 2025',status:'replied',pct:100,info:'EC replied with process details but refused actual verification records, citing "fiduciary relationship." CJP says EC cannot verify what it refuses to share.',appeal:'Not required yet'},
+  {title:'Demonetisation — cabinet notes and RBI correspondence',ministry:'Finance Ministry / RBI',filed:'3 Nov 2023',deadline:'3 Dec 2023',status:'refused',pct:100,info:'Both Finance Ministry and RBI refused under Section 8(1)(a) — "national security." CJP argues a 7-year-old economic decision cannot threaten national security.',appeal:'CIC hearing pending'},
+  {title:'Section 69A blocking orders — CJP X account',ministry:'MeitY',filed:'22 May 2026',deadline:'21 Jun 2026',status:'pending',pct:15,info:'RTI filed within 24 hours of account being withheld. Demands full text of blocking order, IB report cited, and names of officials who signed.',appeal:'None yet — deadline not passed'},
+];
+const sm={refused:{l:'Refused',c:'#C0392B',bg:'#FDF0EE',border:'#F5C0BA'},replied:{l:'Replied',c:'#2A6E10',bg:'#EEF6E8',border:'#A8D08A'},pending:{l:'Pending',c:'#9A5F00',bg:'#FDF7EC',border:'#EDCF8A'},partial:{l:'Partial',c:'#1A5FA0',bg:'#EEF5FC',border:'#AAC8E8'}};
+function renderRTI(f){
+  const list=f==='all'?rtis:f==='appeal'?rtis.filter(r=>r.appeal&&!r.appeal.startsWith('None')):rtis.filter(r=>r.status===f);
+  document.getElementById('rtilist').innerHTML=list.map(r=>{const s=sm[r.status];return`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:5px">
+        <div style="font-size:14px;font-weight:600;line-height:1.4;flex:1">${r.title}</div>
+        <span class="rti-stat" style="background:${s.bg};color:${s.c};border:1px solid ${s.border}">${s.l}</span>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:7px;font-family:'JetBrains Mono',monospace">${r.ministry} · ${r.filed} → ${r.deadline}</div>
+      <div class="pbar"><div class="pfill" style="width:${r.pct}%;background:${s.c}"></div></div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.6">${r.info}</p>
+      ${!r.appeal.startsWith('None')?`<span class="tag b" style="margin-top:8px"><i class="ti ti-gavel" aria-hidden="true"></i> ${r.appeal}</span>`:''}
+    </div>`;}).join('');
+}
+function rfilt(f,btn){document.querySelectorAll('#rti .fb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderRTI(f);}
+renderRTI('all');
+
+const news=[
+  {cat:'cjp',src:'CNN',sbg:'#EEF5FC',stc:'#185FA5',date:'22 May 2026',h:"CJP reaches 20M Instagram followers — double BJP's count in under a week",d:"Gen Z rallied after Chief Justice Surya Kant called unemployed youth 'cockroaches.' The insult became a badge of honour.",url:'https://edition.cnn.com/2026/05/22/india/india-cockroach-janta-party-gen-z-intl-hnk'},
+  {cat:'govt',src:'NBC News',sbg:'#FDF0EE',stc:'#C0392B',date:'21 May 2026',h:"MeitY blocks CJP's X account in India — 'national security' cited",d:"Opposition leaders including Shashi Tharoor called it 'deeply unwise.' CJP's account remained visible internationally.",url:'https://www.nbcnews.com/world/asia/indias-cockroach-janata-party-began-joke-millions-joined-rcna346466'},
+  {cat:'cjp',src:'Wikipedia',sbg:'#EEF6E8',stc:'#2A6E10',date:'16 May 2026',h:'CJP founded — 78 hours to 3M followers. Built using Claude AI.',d:"Abhijeet Dipke, 30, former AAP strategist, launched within hours of the CJI's remarks. AI tools including Claude and ChatGPT built the site.",url:'https://en.wikipedia.org/wiki/Cockroach_Janta_Party'},
+  {cat:'jobs',src:'Reuters',sbg:'#FDF7EC',stc:'#9A5F00',date:'May 2026',h:'54% of Indian Gen Z postponed buying homes — survey',d:'Economic anxiety reshaping life plans. Entry-level IT/BPO jobs now threatened by AI automation on top of structural unemployment.',url:'#'},
+  {cat:'jobs',src:'Azim Premji Univ.',sbg:'#EEF6E8',stc:'#2A6E10',date:'2025',h:'40% of Indian graduates under 25 are unemployed — landmark report',d:'"Rapid expansion in graduates not matched by commensurate growth in employment." Became a cornerstone CJP reference.',url:'#'},
+  {cat:'exam',src:'Supreme Court',sbg:'#F0EEFF',stc:'#4A3AB0',date:'Jun 2024',h:'SC orders CBI probe into NEET 2024 — 24 lakh students affected',d:"India's largest medical entrance exam compromised. NTA credibility destroyed. CJP led protests outside NTA headquarters.",url:'#'},
+  {cat:'exam',src:'Education Ministry',sbg:'#FDF7EC',stc:'#9A5F00',date:'Jun 2024',h:'UGC-NET cancelled one day after exam — dark web leak confirmed',d:'9 lakh candidates found their exam invalid the next morning. Ministry admitted paper appeared online.',url:'#'},
+  {cat:'govt',src:'Supreme Court',sbg:'#FDF0EE',stc:'#C0392B',date:'Feb 2024',h:'Electoral Bonds unconstitutional — ₹16,000+ Cr anonymous donations exposed',d:'5-0 SC verdict. CJP pointed to donor-party links as evidence of institutionalised corruption.',url:'#'},
+  {cat:'cjp',src:'The Hindu',sbg:'#EEF5FC',stc:'#185FA5',date:'May 2026',h:'CJP manifesto: judiciary, elections, 50% women, media freedom, PM CARES audit',d:'Five formal demands released. Volunteers in cockroach costumes conducted clean-up drives in 12 cities while filing RTI applications.',url:'#'},
+];
+function renderNews(f){
+  const list=f==='all'?news:news.filter(n=>n.cat===f);
+  document.getElementById('newslist').innerHTML=list.map(n=>`
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+        <span style="font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;background:${n.sbg};color:${n.stc};padding:3px 9px;border-radius:100px">${n.src}</span>
+        <span style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">${n.date}</span>
+      </div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:5px;line-height:1.4">${n.h}</div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.6">${n.d}</p>
+      ${n.url!=='#'?`<a href="${n.url}" target="_blank" style="font-size:12px;color:var(--blue);display:inline-flex;align-items:center;gap:4px;margin-top:7px;font-family:'JetBrains Mono',monospace;font-weight:600">Read full <i class="ti ti-external-link" style="font-size:12px" aria-hidden="true"></i></a>`:''}
+    </div>`).join('');
+}
+function nfilt(f,btn){document.querySelectorAll('#news .fb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderNews(f);}
+renderNews('all');
+</script>
+</body>
+</html>
